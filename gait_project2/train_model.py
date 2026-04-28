@@ -26,14 +26,8 @@ def train_model(model, train_loader, criterion, optimizer, num_epochs, device):
     --------
     None（无返回值，但会保存最佳模型到文件）
 
-    痛点说明：
-    ----------
-    1. 缺少验证集监控，容易过拟合
-    2. 没有学习率调度器
-    3. TensorBoard重复创建
-    4. 缺少梯度裁剪防止梯度爆炸
-    5. 缺少训练中断恢复机制
-    6. 模型保存路径硬编码
+ 
+
     """
 
     # ==================== 模型训练模式设置 ====================
@@ -41,7 +35,7 @@ def train_model(model, train_loader, criterion, optimizer, num_epochs, device):
     model.train()
     print("开始训练了...")
 
-    # 【痛点1】TensorBoard重复创建问题
+    # TensorBoard重复创建问题
     # 问题：如果在main.py中已经创建了writer，这里又创建新的，会导致日志重复或冲突
     # 解决方案：将writer作为参数传入，或者使用全局单例
     writer = SummaryWriter('runs/gait_experiment')
@@ -49,7 +43,7 @@ def train_model(model, train_loader, criterion, optimizer, num_epochs, device):
     # 初始化最佳训练准确率跟踪变量
     best_train_acc = 0.0
 
-    # 【痛点2】global_step变量未使用
+    # global_step变量未使用
     # 问题：定义了global_step但没有使用，可能是预留的步数计数器
     # 建议：用于记录总训练步数，在批次级别记录指标时使用
     global_step = 0
@@ -66,7 +60,7 @@ def train_model(model, train_loader, criterion, optimizer, num_epochs, device):
             # 将数据移动到指定设备（GPU或CPU）
             inputs, labels = inputs.to(device), labels.to(device)
 
-            # 【痛点4】梯度累积风险
+            # 梯度累积风险
             # 说明：optimizer.zero_grad()清空之前的梯度
             # 如果忘记调用，梯度会累积导致训练失败
             optimizer.zero_grad()
@@ -80,7 +74,7 @@ def train_model(model, train_loader, criterion, optimizer, num_epochs, device):
             # 反向传播：计算梯度
             loss.backward()
 
-            # 【痛点5】缺少梯度裁剪
+            # 缺少梯度裁剪
             # 问题：梯度爆炸可能导致训练不稳定
             # 解决方案：添加 torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
 
@@ -109,7 +103,7 @@ def train_model(model, train_loader, criterion, optimizer, num_epochs, device):
         writer.add_scalar('Epoch/Train_Loss', epoch_loss, epoch)
         writer.add_scalar('Epoch/Train_Accuracy', epoch_acc, epoch)
 
-        # 【痛点6】缺少学习率调度
+        # 缺少学习率调度
         # 问题：固定学习率可能导致收敛缓慢或震荡
         # 建议：添加 scheduler.step() 如 ReduceLROnPlateau 或 StepLR
 
@@ -127,7 +121,7 @@ def train_model(model, train_loader, criterion, optimizer, num_epochs, device):
     print(f"训练完成！最佳训练准确率: {best_train_acc:.4f}")
     writer.close()
 
-    # 【痛点9】缺少模型保存最佳实践
+    # 缺少模型保存最佳实践
     # 问题：只保存了state_dict，没有保存优化器状态、epoch等信息
     # 建议：保存完整的checkpoint用于恢复训练
     # checkpoint = {
