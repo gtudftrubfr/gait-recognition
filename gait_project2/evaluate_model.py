@@ -23,7 +23,7 @@ def evaluate_model(model, data_loader, device, data_name="验证集",return_deta
 
     痛点说明：
     ----------
-    1. #💪只计算准确率，缺少其他评估指标（召回率、F1分数、混淆矩阵）
+    1. #只计算准确率，缺少其他评估指标（召回率、F1分数、混淆矩阵）
     2. 没有考虑类别不平衡问题
     3. 缺少详细错误分析
     4. 无法处理多标签分类或Top-K准确率
@@ -83,13 +83,7 @@ def evaluate_model(model, data_loader, device, data_name="验证集",return_deta
     accuracy = correct_predictions / total_samples
     print(f"{data_name}准确率: {accuracy:.4f}")
 
-    # 【痛点9】缺少其他评估指标
-    # 建议：添加以下指标的返回选项
-    # - 召回率 (Recall)
-    # - 精确率 (Precision)
-    # - F1分数 (F1-Score)
-    # - 混淆矩阵 (Confusion Matrix)
-    # - Top-3/Top-5准确率
+ 
 
     #添加计算召回率、精确率、F1、混淆矩阵
     if return_details:
@@ -135,7 +129,7 @@ def evaluate_model(model, data_loader, device, data_name="验证集",return_deta
         import pandas as pd
         cm_df = pd.DataFrame(confusion_matrix)
         cm_df.to_csv(f'confusion_matrix_{data_name}.csv')
-        print(f"✅ 混淆矩阵已保存到: confusion_matrix_{data_name}.csv")
+        print(f" 混淆矩阵已保存到: confusion_matrix_{data_name}.csv")
         print(f"混淆矩阵形状: {confusion_matrix.shape}")
 
         # 打印前10行预览
@@ -154,3 +148,10 @@ def evaluate_model(model, data_loader, device, data_name="验证集",return_deta
         }
 
     return accuracy
+       # 少其他评估指标
+    # 添加以下指标的返回选项
+    # - 召回率 (Recall)
+    # - 精确率 (Precision)
+    # - F1分数 (F1-Score)
+    # - 混淆矩阵 (Confusion Matrix)
+    # - Top-3/Top-5准确率
