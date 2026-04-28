@@ -158,7 +158,7 @@ def main():
     # - num_epochs: 训练轮数
     # - device: 计算设备(cpu/cuda)
     train_model(model, train_loader, criterion, optimizer, config.NUM_EPOCHS, config.DEVICE)
-    # 💪训练过程缺少验证集监控，可能导致过拟合
+    # 训练过程缺少验证集监控，可能导致过拟合
     # 建议：在train_model内部增加验证集评估和早停机制
 
     # ==================== 6. 模型评估 ====================
@@ -170,7 +170,7 @@ def main():
     # load_state_dict参数：保存的模型参数字典
     model.load_state_dict(torch.load('best_train_model.pth'))
     print("已加载训练集最佳模型")
-    # 【痛点6】模型保存路径硬编码，可能因工作目录变化导致文件未找到
+    # 模型保存路径硬编码，可能因工作目录变化导致文件未找到
     # 建议：使用config中定义的路径，并添加文件存在性检查
 
     # 评估验证集
@@ -190,7 +190,7 @@ def main():
                                                  return_details=True)
 
     print(f"CASIA-B数据集上的最终测试准确率: {test_accuracy:.4f}")
-    #💪 ** 验证集 **：模型训练时用，用于调超参数、选模型、早停， ** 不参与梯度更新 **
+    #** 验证集 **：模型训练时用，用于调超参数、选模型、早停， ** 不参与梯度更新 **
     # ** 测试集 **：模型训练完后用，用于最终评估泛化能力， ** 整个训练过程完全没见过 **
     # ** 关键区别 **：验证集可以反复用（调整模型），测试集 ** 只能用一次 **（出最终结果）。如果根据测试集调模型，测试集就失效了。
     # 记录最终评估结果到TensorBoard
